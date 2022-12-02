@@ -3,7 +3,7 @@ import { JSDOM } from 'jsdom';
 
 const { AOC_COOKIE_SESSION: cookieSession } = process.env;
 
-export const fetchInput = async (day, year) => {
+export const fetchInput = async (day: number, year: number) => {
   const baseUrl = `https://adventofcode.com/${year}/day/${day}`;
 
   console.log(`❗ Fetching input for ${baseUrl}`);
@@ -12,7 +12,7 @@ export const fetchInput = async (day, year) => {
     throw Error('Cannot fetch input before puzzle is released');
   }
 
-  if (!cookieSession) {
+  if (cookieSession == null) {
     throw Error('Session cookie does not exist');
   }
 
@@ -24,7 +24,7 @@ export const fetchInput = async (day, year) => {
   return response.data.replace(/\r?\n$/, '');
 };
 
-export const fetchExampleInput = async (day, year) => {
+export const fetchExampleInput = async (day: number, year: number) => {
   const url = `https://adventofcode.com/${year}/day/${day}`;
 
   console.log(`❗ Fetching example input for ${url}`);
@@ -33,14 +33,24 @@ export const fetchExampleInput = async (day, year) => {
     throw Error('Cannot fetch example input before puzzle is released');
   }
 
-  if (!cookieSession) {
+  if (cookieSession == null) {
     throw Error('Session cookie does not exist');
   }
 
   const response = await axios.get(url);
   const dom = new JSDOM(response.data);
 
-  return dom.window.document
-    .querySelector('pre>code')
-    .textContent.replace(/\r?\n$/, '');
+  const exampleInputElement = dom.window.document.querySelector('pre>code');
+
+  if (exampleInputElement == null) {
+    throw Error('Example input element does not exist');
+  }
+
+  const exampleInput = exampleInputElement.textContent;
+
+  if (exampleInput == null) {
+    throw Error('Example input does not exist');
+  }
+
+  return exampleInput.replace(/\r?\n$/, '');
 };
