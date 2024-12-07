@@ -27,6 +27,22 @@ func main() {
 	}
 
 	println("Part1:", total)
+
+	similarity := 0
+
+	for _, lv := range left {
+		for _, rv := range right {
+			count := 0
+
+			if lv == rv {
+				count++
+			}
+
+			similarity += lv * count
+		}
+	}
+
+	println("Part2:", similarity)
 }
 
 func parseFile(filename string) ([]int, []int) {
